@@ -1,3 +1,4 @@
+//go:build ignore
 // +build ignore
 
 package main
@@ -9,7 +10,7 @@ import (
 	"net"
 	"sync"
 
-	"github.com/nmcclain/ldap"
+	"github.com/pasientskyhosting/ldap"
 )
 
 type ldapHandler struct {

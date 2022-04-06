@@ -1,3 +1,4 @@
+//go:build ignore
 // +build ignore
 
 package main
@@ -6,7 +7,7 @@ import (
 	"log"
 	"net"
 
-	"github.com/nmcclain/ldap"
+	"github.com/pasientskyhosting/ldap"
 )
 
 /////////////

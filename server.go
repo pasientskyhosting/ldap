@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/nmcclain/asn1-ber"
+	ber "github.com/nmcclain/asn1-ber"
 )
 
 type Binder interface {
@@ -152,6 +152,15 @@ func (server *Server) ListenAndServeTLS(listenString string, certFile string, ke
 		return err
 	}
 	tlsConfig := tls.Config{Certificates: []tls.Certificate{cert}}
+	tlsConfig.MinVersion = tls.VersionTLS12
+	tlsConfig.CurvePreferences = []tls.CurveID{tls.CurveP521, tls.CurveP384, tls.CurveP256}
+	tlsConfig.PreferServerCipherSuites = true
+	tlsConfig.CipherSuites = []uint16{
+		tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+		tls.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
+		tls.TLS_RSA_WITH_AES_256_GCM_SHA384,
+		tls.TLS_RSA_WITH_AES_256_CBC_SHA,
+	}
 	tlsConfig.ServerName = "localhost"
 	ln, err := tls.Listen("tcp", listenString, &tlsConfig)
 	if err != nil {
@@ -380,7 +389,7 @@ func routeFunc(dn string, funcNames []string) string {
 	dnMatch := "," + strings.ToLower(dn)
 	var weight int
 	for _, fn := range funcNames {
-		if strings.HasSuffix(dnMatch, "," + fn) {
+		if strings.HasSuffix(dnMatch, ","+fn) {
 			//  empty string as 0, no-comma string 1 , etc
 			if fn == "" {
 				weight = 0
